@@ -1,4 +1,9 @@
+"""
+This script serve as the backend logic for the game, its meant to carry the first night but may be extended
+"""
+
 import random
+import wolf_cli as wc
 
 class WolfGame:
 

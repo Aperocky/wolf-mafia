@@ -1,3 +1,7 @@
+"""
+This script serves as the API layer between backend WOLFGAME class and the clients, which I assume will be cellphone
+"""
+
 from flask import Flask
 from flask import render_template, request, session, redirect, jsonify
 from flask_cors import CORS

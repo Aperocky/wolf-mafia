@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""
+Utility file to record and play audio files
+"""
+
+import sounddevice as sd
+import numpy as np
+import time
+import argparse
+
+def record(filename, duration, fs):
+    rec_array = sd.rec(int(duration*fs), samplerate=fs, channels=1, blocking=True)
+    np.save(filename, rec_array)
+    print(rec_array.shape)
+    return rec_array
+
+def play_record(filename, fs):
+    if not filename.endswith("npy"):
+        filename+=".npy"
+    rec_array = np.load(filename)
+    sd.play(rec_array, fs, blocking=True)
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("type")
+    parser.add_argument("file")
+    parser.add_argument("-t", "--time", type=float, default=5)
+    parser.add_argument("--fs", type=int, default=5000)
+    args = parser.parse_args()
+    if args.type not in ["play", "rec"]:
+        print("I don't recognize {}, defaulting to recording")
+    return args
+
+if __name__ == "__main__":
+    args = parse_args()
+    if args.type == "play":
+        play_record(args.file, args.fs)
+    else:
+        record(args.file, args.time, args.fs)
+
