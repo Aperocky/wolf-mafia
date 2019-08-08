@@ -14,11 +14,11 @@ class WolfGame:
         self.PREDICT_FLAG = False
         self.CURE_FLAG = False
         self.killed = -1 # Nobody
-
+        self.game_roles = {} # Populated only after game starts
         # Randomly assign characters.
         self.assign_role()
         
-    def assign_role(self)
+    def assign_role(self):
         roles = ["WOLF"] * self.wolf_count + ["VILLAGER"] * self.villager_count +\
             ["HUNT"] * self.hunt + ["WITCH"] * self.witch + ["IDIOT"] * self.idiot +\
             ["PERCEIVAL"]
@@ -27,19 +27,35 @@ class WolfGame:
         self.players = [[role, ""] for role in self.roles]
 
     def take_seat(self, uid, index):
+        # Return false when role has been taken.
+        if self.players[index][1]:
+            return False, ""
         self.players[index][1] = uid
+        return True, self.roles[index]
 
-    def startable(self):
+    def unseat(self, index):
+        if self.START_FLAG: # Cannot unseat after you started
+            return False
+        self.players[index][1] = ""
+        return True
+
+    def start_game(self):
         if all(e[1] for e in self.players):
             self.START_FLAG = True
+            self.game_roles = {e[1]: e[0] for e in self.players}
             return True
         return False
 
     def set_kill(self, index):
+        if index >= self.total_player:
+            return False
         self.killed = index
         self.WOLF_FLAG = True
+        return True
 
     def predict(self, index):
+        if index >= self.total_player:
+            return False
         self.PREDICT_FLAG = True
         return self.roles[index]
 
@@ -48,7 +64,13 @@ class WolfGame:
         
     def cure(self, action):
         if action:
-            if not self.killed < 0:
-                self.killed = -1
+            self.killed = -1
         self.CURE_FLAG = True   
-            
+
+    def prequel(self):
+        if not self.CURE_FLAG:
+            return False
+        return True
+
+    def sequel(self):
+        pass
