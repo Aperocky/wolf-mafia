@@ -50,7 +50,7 @@ def seat():
         return jsonify(json_bool_response(False, "您已经坐在了{}号".format(
             session["seat"])))
     if "uid" not in session:
-        session["uid"] = uuid.uuid4()
+        session["uid"] = str(uuid.uuid4())
     status, role = wolfgame.take_seat(session["uid"], seat_num)
     if status:
         session["seat"] = seat_num
@@ -85,7 +85,7 @@ def wolfkill():
     if wolfgame.WOLF_FLAG:
         return jsonify(json_bool_response(False, "已经杀过了"))
     if wolfgame.set_kill(index):
-        return jsonify(json_bool_response(True, 
+        return jsonify(json_bool_response(True,
         "{}号玩家被杀".format(index)))
     return jsonify(json_bool_response(False, "{}号玩家不存在".format(index)))
 
@@ -141,4 +141,4 @@ def cure_action():
     wolfgame.cure(action)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

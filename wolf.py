@@ -48,6 +48,7 @@ class WolfGame:
         if all(e[1] for e in self.players):
             self.START_FLAG = True
             self.game_roles = {e[1]: e[0] for e in self.players}
+            wc.wolf_start()
             return True
         return False
 
@@ -56,12 +57,14 @@ class WolfGame:
             return False
         self.killed = index
         self.WOLF_FLAG = True
+        wc.perceival_start()
         return True
 
     def predict(self, index):
         if index >= self.total_player:
             return False
         self.PREDICT_FLAG = True
+        wc.witch_start()
         return self.roles[index]
 
     def get_kill(self):
@@ -71,11 +74,8 @@ class WolfGame:
         if action:
             self.killed = -1
         self.CURE_FLAG = True   
+        wc.end_night()
 
-    def prequel(self):
-        if not self.CURE_FLAG:
-            return False
-        return True
+    def result(self):
+        wc.announce_result(self.killed)
 
-    def sequel(self):
-        pass
