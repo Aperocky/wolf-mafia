@@ -38,6 +38,11 @@ class WolfGame:
         self.players[index][1] = uid
         return True, self.roles[index]
 
+    def who_sits_here(self, index):
+        if self.players[index][1]:
+            return self.players[index][1]
+        return False
+
     def unseat(self, index):
         if self.START_FLAG: # Cannot unseat after you started
             return False

@@ -8,8 +8,9 @@ from flask_cors import CORS
 import wolf
 import uuid
 
-app = Flask(__name__, template_folder='templates', static_folder='assets')
+app = Flask(__name__, template_folder='templates', static_folder='assets/client')
 app.secret_key = "REPLACE_ME"
+session.clear()
 
 wolfgame = wolf.WolfGame() # Wolf placeholder game
 rolemap = {
@@ -41,6 +42,11 @@ def start():
     if wolfgame.start_game():
         return jsonify(json_bool_response(True))
     return jsonify(json_bool_response(False, "还没全部入座呢"))
+
+# Serve the single page app to client
+@app.route("/client")
+def client():
+    return render_template("base.html")
 
 # This is a client call
 @app.route("/seat")

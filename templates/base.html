@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Rocky Li">
+
+    <title>WOLF</title>
+    <!-- Bootstrap and jquery using CDNs -->
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='custom.css') }}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container" id="wrapper">
+        <div class="row" id="header">
+            <div class="col-6 mx-auto">
+                <button class="btn btn-info" id="first_menu">
+                <a>入座</a>
+                </button>
+            </div>
+            <div class="col-6 mx-auto">
+                <button class="btn btn-info" id="first_menu">
+                <a>发动技能</a>
+                </button>
+            </div>
+        </div>
+        <div class="row" id="image_space">
+            <div class="col-lg-11 mx-auto">
+                <div class="promptblock" id="prompt" style="display: none;">
+                </div>
+                <div class="imageblock" id="image_default" style="display: block;">
+                    <img class="center-block" src="{{ url_for('static', filename='wolf_default.jpg') }}">
+                </div>
+                <div class="imageblock" id="image_wolf" style="display: none;">
+                    <img class="center-block" src="{{ url_for('static', filename='wolf_wolf.jpg') }}">
+                </div>
+                <div class="imageblock" id="image_villager" style="display: none;">
+                    <img class="center-block" src="{{ url_for('static', filename='wolf_villager.jpg') }}">
+                </div>
+                <div class="imageblock" id="image_witch" style="display: none;">
+                    <img class="center-block" src="{{ url_for('static', filename='wolf_witch.jpg') }}">
+                </div>
+                <div class="imageblock" id="image_perceival" style="display: none;">
+                    <img class="center-block" src="{{ url_for('static', filename='wolf_perceival.jpg') }}">
+                </div>
+                <div class="imageblock" id="image_hunt" style="display: none;">
+                    <img class="center-block" src="{{ url_for('static', filename='wolf_hunter.jpg') }}">
+                </div>
+                <div class="imageblock" id="image_idiot" style="display: none;">
+                    <img class="center-block" src="{{ url_for('static', filename='wolf_idiot.jpg') }}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark" id="bottom">
+        <div class="container">
+            <p class="m-0 text-center text-white">狼人杀@Rocky</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='func.js') }}"></script>
+</body>
