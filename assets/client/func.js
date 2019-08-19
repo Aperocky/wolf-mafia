@@ -126,4 +126,96 @@ function take_seat_begin(){
 
 first_link.addEventListener("click", take_seat_begin);
 
+// --------- DETERMINE CORRECT FUNCTION ----------- //
 
+function launch_ability(){
+    if (ROLE_FLAG == "default"){
+        alert("您还没领身份");
+    } else {
+        if (ROLE_FLAG == "wolf"){
+            launch_wolf_ability();
+        } else if (ROLE_FLAG == "witch"){
+            launch_witch_ability();
+        } else if (ROLE_FLAG == "perceival"){
+            launch_perceival_ability();
+        } else {
+            alert("您没有技能");
+        }
+    }
+}
+
+function create_prompt(question_string, button_string, ajax_function){
+    form_element = prompt_initiator();
+    let question_div = document.createElement("div");
+    question_div.className = "formgroup";
+    let question_label = document.createElement("label");
+    question_label.textContent = question_string;
+    let question_input = document.createElement("input");
+    question_input.setAttribute("type", "number");
+    question_input.id = "prompt_question_input";
+    question_div.appendChild(question_label);
+    question_div.appendChild(question_input);
+    let submit_button = document.createElement("button");
+    submit_button.className = "btn btn-primary";
+    submit_button.id = "prompt_submit_button";
+    submit_button.textContent = button_string;
+    submit_button.style.marginTop = "25px";
+    submit_button.addEventListener("click", ajax_function);
+    let return_button = document.createElement("button");
+    return_button.className = "btn btn-primary";
+    return_button.id = "prompt_return_button";
+    return_button.textContent = "返回";
+    return_button.addEventListener("click", e => {
+        e.preventDefault();
+        prompt_toggler(false);
+    });
+    form_element.appendChild(question_div);
+    form_element.appendChild(submit_button);
+    form_element.appendChild(return_button);
+}
+
+function create_prompt(question_string, button_string, ajax_function){
+    form_element = prompt_initiator();
+    let question_div = document.createElement("div");
+    question_div.className = "formgroup";
+    let question_label = document.createElement("label");
+    question_label.textContent = question_string;
+    let question_input = document.createElement("input");
+    question_input.setAttribute("type", "number");
+    question_input.id = "prompt_question_input";
+    question_div.appendChild(question_label);
+    question_div.appendChild(question_input);
+
+    let newbie = ajax_get_killed();
+    let submit_button = document.createElement("button");
+    submit_button.className = "btn btn-primary";
+    submit_button.id = "prompt_submit_button";
+    submit_button.textContent = button_string;
+    submit_button.style.marginTop = "25px";
+    submit_button.addEventListener("click", ajax_function);
+    let return_button = document.createElement("button");
+    return_button.className = "btn btn-primary";
+    return_button.id = "prompt_return_button";
+    return_button.textContent = "返回";
+    return_button.addEventListener("click", e => {
+        e.preventDefault();
+        prompt_toggler(false);
+    });
+    form_element.appendChild(question_div);
+    form_element.appendChild(submit_button);
+    form_element.appendChild(return_button);
+}
+
+function launch_wolf_ability(){
+    prompt_toggler(true);
+    create_prompt("请杀人，输入号码", "杀", ajax_wolf_ability);
+}
+
+function launch_perceival_ability(){
+    prompt_toggler(true);
+    create_prompt("请验人，输入号码", "验", ajax_perceival_ability);
+}
+
+function launch_witch_ability(){
+    prompt_toggler(true);
+}

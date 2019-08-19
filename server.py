@@ -10,7 +10,6 @@ import uuid
 
 app = Flask(__name__, template_folder='templates', static_folder='assets/client')
 app.secret_key = "REPLACE_ME"
-session.clear()
 
 wolfgame = wolf.WolfGame() # Wolf placeholder game
 rolemap = {
@@ -44,17 +43,26 @@ def start():
     return jsonify(json_bool_response(False, "还没全部入座呢"))
 
 # Serve the single page app to client
-@app.route("/client")
+@app.route("/")
 def client():
+    if "seat" in session:
+        c_uid = wolfgame.who_sits_here(session["seat"])
+        if not "uid" in session:
+            session.clear()
+        if "uid" in session and session["uid"] != c_uid:
+            session.clear()
     return render_template("base.html")
 
 # This is a client call
 @app.route("/seat")
 def seat():
-    seat_num = int(request.args.get("seat"))
+    seat_num = request.args.get("seat");
+    try:
+        seat_num = int(seat_num)
+    except:
+        return jsonify(json_bool_response(False, "请输入数字"));
     if "seat" in session:
-        return jsonify(json_bool_response(False, "您已经坐在了{}号".format(
-            session["seat"])))
+        return jsonify(json_bool_response(False, "您已经坐在了{}号".format( session["seat"])))
     if "uid" not in session:
         session["uid"] = str(uuid.uuid4())
     status, role = wolfgame.take_seat(session["uid"], seat_num)
@@ -65,7 +73,7 @@ def seat():
             "reason": "您坐在了{}号座".format(seat_num),
             "role": role
         })
-    return jsonify(json_bool_response(False))
+    return jsonify(json_bool_response(False, "已经有人坐在这了"))
 
 @app.route("/unseat")
 def unseat():
@@ -81,7 +89,10 @@ def unseat():
 # This is a client call from wolf character
 @app.route("/kill")
 def wolfkill():
-    index = int(request.args.get("index"))
+    try:
+        index = int(request.args.get("index"))
+    except:
+        return jsonify(json_bool_response(False, "请输入数字"))
     wolflead = session.get("uid")
     # Give javascript the screening ability, but still check here
     if not wolfgame.game_roles[wolflead] == "WOLF":
@@ -99,7 +110,10 @@ def wolfkill():
 @app.route("/predict")
 def predict():
     perceival = session.get("uid")
-    index = int(request.args.get("index"))
+    try:
+        index = int(request.args.get("index"))
+    except:
+        return jsonify(json_bool_response(False, "请输入数字"))
     if not wolfgame.game_roles[perceival] == "PERCEIVAL":
         return jsonify(json_bool_response(False, "你不是预言家"))
     if not wolfgame.WOLF_FLAG:
@@ -118,7 +132,6 @@ def predict():
 @app.route("/cure_display")
 def cure_display():
     witch = session.get("uid")
-    index = int(request.args.get("index"))
     if not wolfgame.game_roles[witch] == "WITCH":
         return jsonify(json_bool_response(False, "你不是女巫"))
     if not wolfgame.PREDICT_FLAG:
@@ -137,7 +150,6 @@ def cure_action():
     # Action must be 0 or 1 (BOOLINT)
     action = int(request.args.get("action"))
     witch = session.get("uid")
-    index = int(request.args.get("index"))
     if not wolfgame.game_roles[witch] == "WITCH":
         return jsonify(json_bool_response(False, "你不是女巫"))
     if not wolfgame.PREDICT_FLAG:
